@@ -147,6 +147,10 @@ Full examples:
 - MITRE ATT&CK mapping helps explain the attacker behavior behind an alert.
 - Safe sample data makes a cloud security project public-portfolio friendly.
 
+## What I Struggled With
+
+The hardest part was keeping the rules explainable without turning the project into a fake SIEM. I kept the detections event-based, with one simple threshold rule, so I can walk through each alert in an interview.
+
 ## Future Improvements
 
 - Add CSV export
@@ -154,26 +158,4 @@ Full examples:
 - Add configurable thresholds
 - Add Sigma-style rule files
 - Add CloudTrail Lake query examples as documentation only
-- Add GitHub Actions test workflow
 - Add more S3, KMS, GuardDuty, and CloudTrail management detections
-
-## Commands to Publish
-
-```bash
-cd "/mnt/c/Users/Thiago Micki/PersonalProjects/cloudtrail-threat-detection-lab"
-
-python -m unittest discover -s tests
-python -m cloudtrail_detector sample_logs
-python -m cloudtrail_detector sample_logs --json-out reports/local/alert-report.json
-
-git init -b main
-git add .
-git commit -m "Add CloudTrail threat detection lab"
-
-gh repo create cloudtrail-threat-detection-lab \
-  --public \
-  --description "Python lab for detecting suspicious AWS CloudTrail activity using sanitized sample logs, MITRE ATT&CK mapping, and JSON reports." \
-  --source . \
-  --remote origin \
-  --push
-```

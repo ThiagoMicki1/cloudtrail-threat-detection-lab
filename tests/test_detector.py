@@ -5,6 +5,7 @@ from pathlib import Path
 
 from cloudtrail_detector import analyze_path, load_events
 from cloudtrail_detector.detector import write_json_report
+from cloudtrail_detector.rules import run_rules
 
 
 SAMPLE_LOG = Path("sample_logs/cloudtrail-sample-events.json")
@@ -62,6 +63,22 @@ class DetectorTests(unittest.TestCase):
             self.assertEqual(report["summary"]["total_alerts"], len(alerts))
             self.assertGreaterEqual(report["summary"]["by_severity"]["CRITICAL"], 1)
             self.assertEqual(len(report["alerts"]), len(alerts))
+
+    def test_access_denied_spike_requires_threshold(self):
+        base_event = {
+            "eventTime": "2026-08-20T12:00:00Z",
+            "eventName": "ListUsers",
+            "awsRegion": "us-east-1",
+            "sourceIPAddress": "198.51.100.44",
+            "userIdentity": {"userName": "demo-user"},
+            "errorCode": "AccessDenied",
+        }
+
+        two_events = [dict(base_event), dict(base_event, eventName="ListRoles")]
+        three_events = two_events + [dict(base_event, eventName="ListPolicies")]
+
+        self.assertNotIn("AccessDenied spike", {alert.rule_name for alert in run_rules(two_events)})
+        self.assertIn("AccessDenied spike", {alert.rule_name for alert in run_rules(three_events)})
 
 
 if __name__ == "__main__":

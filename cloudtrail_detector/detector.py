@@ -61,4 +61,4 @@ def write_json_report(alerts: list[Alert], output_path: str | Path) -> None:
         },
         "alerts": [alert.to_dict() for alert in alerts],
     }
-    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8", newline="\n")
