@@ -1,0 +1,263 @@
+{
+  "Records": [
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "Root",
+        "principalId": "123456789012",
+        "arn": "arn:aws:iam::123456789012:root",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:00:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.10",
+      "responseElements": {
+        "ConsoleLogin": "Success"
+      },
+      "additionalEventData": {
+        "MFAUsed": "Yes"
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "alice",
+        "arn": "arn:aws:iam::123456789012:user/alice",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:01:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "198.51.100.23",
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      },
+      "errorMessage": "Failed authentication"
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "bob",
+        "arn": "arn:aws:iam::123456789012:user/bob",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:02:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "198.51.100.44",
+      "responseElements": {
+        "ConsoleLogin": "Success"
+      },
+      "additionalEventData": {
+        "MFAUsed": "No"
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "dev-user",
+        "arn": "arn:aws:iam::123456789012:user/dev-user",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:03:00Z",
+      "eventSource": "iam.amazonaws.com",
+      "eventName": "CreateAccessKey",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "192.0.2.10",
+      "requestParameters": {
+        "userName": "dev-user"
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "admin-operator",
+        "arn": "arn:aws:iam::123456789012:user/admin-operator",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:04:00Z",
+      "eventSource": "iam.amazonaws.com",
+      "eventName": "AttachRolePolicy",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "192.0.2.15",
+      "requestParameters": {
+        "roleName": "SampleAppRole",
+        "policyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "network-admin",
+        "arn": "arn:aws:iam::123456789012:user/network-admin",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:05:00Z",
+      "eventSource": "ec2.amazonaws.com",
+      "eventName": "AuthorizeSecurityGroupIngress",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "192.0.2.20",
+      "requestParameters": {
+        "groupId": "sg-0123456789abcdef0",
+        "ipPermissions": {
+          "items": [
+            {
+              "ipProtocol": "tcp",
+              "fromPort": 22,
+              "toPort": 22,
+              "ipRanges": {
+                "items": [
+                  {
+                    "cidrIp": "0.0.0.0/0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "security-admin",
+        "arn": "arn:aws:iam::123456789012:user/security-admin",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:06:00Z",
+      "eventSource": "cloudtrail.amazonaws.com",
+      "eventName": "StopLogging",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "198.51.100.77",
+      "requestParameters": {
+        "name": "sample-org-trail"
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "contractor",
+        "arn": "arn:aws:iam::123456789012:user/contractor",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:07:00Z",
+      "eventSource": "sts.amazonaws.com",
+      "eventName": "AssumeRole",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "198.51.100.77",
+      "requestParameters": {
+        "roleArn": "arn:aws:iam::123456789012:role/AdminBreakGlassRole",
+        "roleSessionName": "sample-session"
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "identity-admin",
+        "arn": "arn:aws:iam::123456789012:user/identity-admin",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:08:00Z",
+      "eventSource": "iam.amazonaws.com",
+      "eventName": "CreateUser",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "192.0.2.30",
+      "requestParameters": {
+        "userName": "new-backup-user"
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "identity-admin",
+        "arn": "arn:aws:iam::123456789012:user/identity-admin",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:09:00Z",
+      "eventSource": "iam.amazonaws.com",
+      "eventName": "DeactivateMFADevice",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "192.0.2.30",
+      "requestParameters": {
+        "userName": "finance-user",
+        "serialNumber": "arn:aws:iam::123456789012:mfa/finance-user"
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "storage-admin",
+        "arn": "arn:aws:iam::123456789012:user/storage-admin",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:10:00Z",
+      "eventSource": "s3.amazonaws.com",
+      "eventName": "PutBucketPolicy",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "192.0.2.40",
+      "requestParameters": {
+        "bucketName": "sample-public-risk-bucket",
+        "bucketPolicy": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": "s3:GetObject",
+              "Resource": "arn:aws:s3:::sample-public-risk-bucket/*"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "probe-user",
+        "arn": "arn:aws:iam::123456789012:user/probe-user",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:11:00Z",
+      "eventSource": "iam.amazonaws.com",
+      "eventName": "ListUsers",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.88",
+      "errorCode": "AccessDenied",
+      "errorMessage": "User is not authorized to perform iam:ListUsers"
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "probe-user",
+        "arn": "arn:aws:iam::123456789012:user/probe-user",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:11:20Z",
+      "eventSource": "ec2.amazonaws.com",
+      "eventName": "DescribeInstances",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.88",
+      "errorCode": "UnauthorizedOperation",
+      "errorMessage": "You are not authorized to perform this operation"
+    },
+    {
+      "userIdentity": {
+        "type": "IAMUser",
+        "userName": "probe-user",
+        "arn": "arn:aws:iam::123456789012:user/probe-user",
+        "accountId": "123456789012"
+      },
+      "eventTime": "2026-08-20T12:11:40Z",
+      "eventSource": "s3.amazonaws.com",
+      "eventName": "ListBuckets",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.88",
+      "errorCode": "AccessDenied",
+      "errorMessage": "Access Denied"
+    }
+  ]
+}

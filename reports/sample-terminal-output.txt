@@ -1,0 +1,137 @@
+========================================================================
+CloudTrail Threat Detection Lab
+========================================================================
+Total alerts: 12
+Severity counts: INFO: 0 | WARN: 3 | HIGH: 5 | CRITICAL: 4
+
+------------------------------------------------------------------------
+[CRITICAL] Root account usage
+Time:        2026-08-20T12:00:00Z
+Event:       ConsoleLogin
+Actor:       arn:aws:iam::123456789012:root
+Source IP:   203.0.113.10
+Region:      us-east-1
+MITRE:       T1078 Valid Accounts - Initial Access / Privilege Escalation
+Evidence:    CloudTrail event was performed by the AWS root identity.
+Recommend:   Avoid root account activity. Use named IAM roles/users with MFA and least privilege.
+
+------------------------------------------------------------------------
+[WARN] Failed console login
+Time:        2026-08-20T12:01:00Z
+Event:       ConsoleLogin
+Actor:       alice
+Source IP:   198.51.100.23
+Region:      us-east-1
+MITRE:       T1110 Brute Force - Credential Access
+Evidence:    AWS ConsoleLogin returned Failure.
+Recommend:   Review source IP, user, and failure volume. Enforce MFA and investigate repeated failures.
+
+------------------------------------------------------------------------
+[HIGH] Console login without MFA
+Time:        2026-08-20T12:02:00Z
+Event:       ConsoleLogin
+Actor:       bob
+Source IP:   198.51.100.44
+Region:      us-east-1
+MITRE:       T1078 Valid Accounts - Initial Access
+Evidence:    Successful console login had MFAUsed=No.
+Recommend:   Require MFA for console access and review whether this identity is exempt from MFA controls.
+
+------------------------------------------------------------------------
+[HIGH] New access key creation
+Time:        2026-08-20T12:03:00Z
+Event:       CreateAccessKey
+Actor:       dev-user
+Source IP:   192.0.2.10
+Region:      us-east-1
+MITRE:       T1098 Account Manipulation - Persistence
+Evidence:    CreateAccessKey was called for an IAM principal.
+Recommend:   Confirm the key is approved. Rotate or delete unexpected access keys immediately.
+
+------------------------------------------------------------------------
+[HIGH] IAM policy attachment or policy change
+Time:        2026-08-20T12:04:00Z
+Event:       AttachRolePolicy
+Actor:       admin-operator
+Source IP:   192.0.2.15
+Region:      us-east-1
+MITRE:       T1098 Account Manipulation - Privilege Escalation / Persistence
+Evidence:    AttachRolePolicy can change AWS permissions.
+Recommend:   Review the policy diff, target principal, and change ticket. Revert unauthorized privilege changes.
+
+------------------------------------------------------------------------
+[HIGH] Security group opened to the world
+Time:        2026-08-20T12:05:00Z
+Event:       AuthorizeSecurityGroupIngress
+Actor:       network-admin
+Source IP:   192.0.2.20
+Region:      us-east-1
+MITRE:       T1562 Impair Defenses / Initial Access support
+Evidence:    Ingress rule includes public CIDR range(s): 0.0.0.0/0.
+Recommend:   Restrict inbound access to trusted CIDRs and confirm the exposed port is required.
+
+------------------------------------------------------------------------
+[CRITICAL] CloudTrail stopped or deleted
+Time:        2026-08-20T12:06:00Z
+Event:       StopLogging
+Actor:       security-admin
+Source IP:   198.51.100.77
+Region:      us-east-1
+MITRE:       T1562 Impair Defenses - Defense Evasion
+Evidence:    StopLogging can reduce AWS audit visibility.
+Recommend:   Re-enable logging, protect CloudTrail with least privilege, and investigate the actor immediately.
+
+------------------------------------------------------------------------
+[HIGH] Suspicious AssumeRole activity
+Time:        2026-08-20T12:07:00Z
+Event:       AssumeRole
+Actor:       contractor
+Source IP:   198.51.100.77
+Region:      us-east-1
+MITRE:       T1078 Valid Accounts / T1098 Account Manipulation
+Evidence:    AssumeRole targeted arn:aws:iam::123456789012:role/AdminBreakGlassRole from 198.51.100.77.
+Recommend:   Validate the source IP, role target, session name, and business reason for the role assumption.
+
+------------------------------------------------------------------------
+[WARN] IAM user created
+Time:        2026-08-20T12:08:00Z
+Event:       CreateUser
+Actor:       identity-admin
+Source IP:   192.0.2.30
+Region:      us-east-1
+MITRE:       T1136.003 Create Account: Cloud Account - Persistence
+Evidence:    CreateUser created or attempted to create IAM user new-backup-user.
+Recommend:   Confirm the user was approved. Prefer federated identities and remove unexpected IAM users.
+
+------------------------------------------------------------------------
+[CRITICAL] MFA device deactivated
+Time:        2026-08-20T12:09:00Z
+Event:       DeactivateMFADevice
+Actor:       identity-admin
+Source IP:   192.0.2.30
+Region:      us-east-1
+MITRE:       T1556.006 Modify Authentication Process: Multi-Factor Authentication
+Evidence:    DeactivateMFADevice changed MFA protection for an identity.
+Recommend:   Confirm the MFA removal was approved. Re-enable MFA and review recent activity for the identity.
+
+------------------------------------------------------------------------
+[CRITICAL] S3 bucket policy changed to public-risky permissions
+Time:        2026-08-20T12:10:00Z
+Event:       PutBucketPolicy
+Actor:       storage-admin
+Source IP:   192.0.2.40
+Region:      us-east-1
+MITRE:       T1619 Cloud Storage Object Discovery - Discovery / Exfiltration risk
+Evidence:    PutBucketPolicy made public-style access possible on bucket sample-public-risk-bucket.
+Recommend:   Remove public principals, enable S3 Block Public Access, and review object access logs.
+
+------------------------------------------------------------------------
+[WARN] AccessDenied spike
+Time:        2026-08-20T12:11:00Z
+Event:       AccessDeniedSpike
+Actor:       probe-user
+Source IP:   203.0.113.88
+Region:      us-east-1
+MITRE:       T1087 Account Discovery / T1110 Brute Force - Discovery or Credential Access
+Evidence:    3 denied API calls from actor probe-user at 203.0.113.88: DescribeInstances, ListBuckets, ListUsers.
+Recommend:   Review whether the actor is probing permissions, using stale credentials, or attempting unauthorized access.

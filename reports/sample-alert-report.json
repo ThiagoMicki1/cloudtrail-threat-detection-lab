@@ -1,0 +1,157 @@
+{
+  "summary": {
+    "total_alerts": 12,
+    "by_severity": {
+      "INFO": 0,
+      "WARN": 3,
+      "HIGH": 5,
+      "CRITICAL": 4
+    }
+  },
+  "alerts": [
+    {
+      "severity": "CRITICAL",
+      "rule_name": "Root account usage",
+      "event_name": "ConsoleLogin",
+      "actor": "arn:aws:iam::123456789012:root",
+      "source_ip": "203.0.113.10",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:00:00Z",
+      "evidence": "CloudTrail event was performed by the AWS root identity.",
+      "mitre_attack": "T1078 Valid Accounts - Initial Access / Privilege Escalation",
+      "recommendation": "Avoid root account activity. Use named IAM roles/users with MFA and least privilege."
+    },
+    {
+      "severity": "WARN",
+      "rule_name": "Failed console login",
+      "event_name": "ConsoleLogin",
+      "actor": "alice",
+      "source_ip": "198.51.100.23",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:01:00Z",
+      "evidence": "AWS ConsoleLogin returned Failure.",
+      "mitre_attack": "T1110 Brute Force - Credential Access",
+      "recommendation": "Review source IP, user, and failure volume. Enforce MFA and investigate repeated failures."
+    },
+    {
+      "severity": "HIGH",
+      "rule_name": "Console login without MFA",
+      "event_name": "ConsoleLogin",
+      "actor": "bob",
+      "source_ip": "198.51.100.44",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:02:00Z",
+      "evidence": "Successful console login had MFAUsed=No.",
+      "mitre_attack": "T1078 Valid Accounts - Initial Access",
+      "recommendation": "Require MFA for console access and review whether this identity is exempt from MFA controls."
+    },
+    {
+      "severity": "HIGH",
+      "rule_name": "New access key creation",
+      "event_name": "CreateAccessKey",
+      "actor": "dev-user",
+      "source_ip": "192.0.2.10",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:03:00Z",
+      "evidence": "CreateAccessKey was called for an IAM principal.",
+      "mitre_attack": "T1098 Account Manipulation - Persistence",
+      "recommendation": "Confirm the key is approved. Rotate or delete unexpected access keys immediately."
+    },
+    {
+      "severity": "HIGH",
+      "rule_name": "IAM policy attachment or policy change",
+      "event_name": "AttachRolePolicy",
+      "actor": "admin-operator",
+      "source_ip": "192.0.2.15",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:04:00Z",
+      "evidence": "AttachRolePolicy can change AWS permissions.",
+      "mitre_attack": "T1098 Account Manipulation - Privilege Escalation / Persistence",
+      "recommendation": "Review the policy diff, target principal, and change ticket. Revert unauthorized privilege changes."
+    },
+    {
+      "severity": "HIGH",
+      "rule_name": "Security group opened to the world",
+      "event_name": "AuthorizeSecurityGroupIngress",
+      "actor": "network-admin",
+      "source_ip": "192.0.2.20",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:05:00Z",
+      "evidence": "Ingress rule includes public CIDR range(s): 0.0.0.0/0.",
+      "mitre_attack": "T1562 Impair Defenses / Initial Access support",
+      "recommendation": "Restrict inbound access to trusted CIDRs and confirm the exposed port is required."
+    },
+    {
+      "severity": "CRITICAL",
+      "rule_name": "CloudTrail stopped or deleted",
+      "event_name": "StopLogging",
+      "actor": "security-admin",
+      "source_ip": "198.51.100.77",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:06:00Z",
+      "evidence": "StopLogging can reduce AWS audit visibility.",
+      "mitre_attack": "T1562 Impair Defenses - Defense Evasion",
+      "recommendation": "Re-enable logging, protect CloudTrail with least privilege, and investigate the actor immediately."
+    },
+    {
+      "severity": "HIGH",
+      "rule_name": "Suspicious AssumeRole activity",
+      "event_name": "AssumeRole",
+      "actor": "contractor",
+      "source_ip": "198.51.100.77",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:07:00Z",
+      "evidence": "AssumeRole targeted arn:aws:iam::123456789012:role/AdminBreakGlassRole from 198.51.100.77.",
+      "mitre_attack": "T1078 Valid Accounts / T1098 Account Manipulation",
+      "recommendation": "Validate the source IP, role target, session name, and business reason for the role assumption."
+    },
+    {
+      "severity": "WARN",
+      "rule_name": "IAM user created",
+      "event_name": "CreateUser",
+      "actor": "identity-admin",
+      "source_ip": "192.0.2.30",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:08:00Z",
+      "evidence": "CreateUser created or attempted to create IAM user new-backup-user.",
+      "mitre_attack": "T1136.003 Create Account: Cloud Account - Persistence",
+      "recommendation": "Confirm the user was approved. Prefer federated identities and remove unexpected IAM users."
+    },
+    {
+      "severity": "CRITICAL",
+      "rule_name": "MFA device deactivated",
+      "event_name": "DeactivateMFADevice",
+      "actor": "identity-admin",
+      "source_ip": "192.0.2.30",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:09:00Z",
+      "evidence": "DeactivateMFADevice changed MFA protection for an identity.",
+      "mitre_attack": "T1556.006 Modify Authentication Process: Multi-Factor Authentication",
+      "recommendation": "Confirm the MFA removal was approved. Re-enable MFA and review recent activity for the identity."
+    },
+    {
+      "severity": "CRITICAL",
+      "rule_name": "S3 bucket policy changed to public-risky permissions",
+      "event_name": "PutBucketPolicy",
+      "actor": "storage-admin",
+      "source_ip": "192.0.2.40",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:10:00Z",
+      "evidence": "PutBucketPolicy made public-style access possible on bucket sample-public-risk-bucket.",
+      "mitre_attack": "T1619 Cloud Storage Object Discovery - Discovery / Exfiltration risk",
+      "recommendation": "Remove public principals, enable S3 Block Public Access, and review object access logs."
+    },
+    {
+      "severity": "WARN",
+      "rule_name": "AccessDenied spike",
+      "event_name": "AccessDeniedSpike",
+      "actor": "probe-user",
+      "source_ip": "203.0.113.88",
+      "aws_region": "us-east-1",
+      "timestamp": "2026-08-20T12:11:00Z",
+      "evidence": "3 denied API calls from actor probe-user at 203.0.113.88: DescribeInstances, ListBuckets, ListUsers.",
+      "mitre_attack": "T1087 Account Discovery / T1110 Brute Force - Discovery or Credential Access",
+      "recommendation": "Review whether the actor is probing permissions, using stale credentials, or attempting unauthorized access."
+    }
+  ]
+}
