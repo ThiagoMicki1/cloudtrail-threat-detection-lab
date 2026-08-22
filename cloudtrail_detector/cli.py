@@ -6,13 +6,29 @@ from collections import Counter
 from .detector import Alert, analyze_path, write_json_report
 
 
+SEVERITY_RANK = {"INFO": 0, "WARN": 1, "HIGH": 2, "CRITICAL": 3}
+
+
+def filter_by_min_severity(alerts: list[Alert], min_severity: str | None) -> list[Alert]:
+    if not min_severity:
+        return alerts
+    minimum = SEVERITY_RANK[min_severity.upper()]
+    return [alert for alert in alerts if SEVERITY_RANK.get(alert.severity, -1) >= minimum]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Analyze sanitized AWS CloudTrail JSON logs.")
     parser.add_argument("path", help="CloudTrail JSON file or folder of JSON files")
     parser.add_argument("--json-out", help="Optional path to write a JSON alert report")
+    parser.add_argument(
+        "--min-severity",
+        choices=["INFO", "WARN", "HIGH", "CRITICAL"],
+        type=str.upper,
+        help="Only show alerts at or above this severity.",
+    )
     args = parser.parse_args()
 
-    alerts = analyze_path(args.path)
+    alerts = filter_by_min_severity(analyze_path(args.path), args.min_severity)
     print_report(alerts)
     if args.json_out:
         write_json_report(alerts, args.json_out)

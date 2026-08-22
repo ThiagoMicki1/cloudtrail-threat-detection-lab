@@ -30,7 +30,7 @@ CloudTrail records AWS account activity such as console logins, IAM changes, STS
 3. Runs event-based detection rules.
 4. Runs a simple threshold rule for repeated `AccessDenied` or `UnauthorizedOperation` events.
 5. Prints terminal alerts with severity, evidence, MITRE mapping, and recommendations.
-6. Optionally writes a JSON report.
+6. Optionally filters by minimum severity and writes a JSON report.
 
 ## Detection Rules Summary
 
@@ -90,6 +90,12 @@ Analyze one file:
 
 ```bash
 python -m cloudtrail_detector sample_logs/cloudtrail-sample-events.json
+```
+
+Show only high and critical alerts:
+
+```bash
+python -m cloudtrail_detector sample_logs --min-severity HIGH
 ```
 
 ## Export JSON
@@ -154,7 +160,6 @@ The hardest part was keeping the rules explainable without turning the project i
 ## Future Improvements
 
 - Add CSV export
-- Add severity filtering
 - Add configurable thresholds
 - Add Sigma-style rule files
 - Add CloudTrail Lake query examples as documentation only

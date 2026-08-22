@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from cloudtrail_detector import analyze_path, load_events
+from cloudtrail_detector.cli import filter_by_min_severity
 from cloudtrail_detector.detector import write_json_report
 from cloudtrail_detector.rules import run_rules
 
@@ -63,6 +64,14 @@ class DetectorTests(unittest.TestCase):
             self.assertEqual(report["summary"]["total_alerts"], len(alerts))
             self.assertGreaterEqual(report["summary"]["by_severity"]["CRITICAL"], 1)
             self.assertEqual(len(report["alerts"]), len(alerts))
+
+    def test_min_severity_filter_keeps_high_and_critical(self):
+        alerts = analyze_path(SAMPLE_LOG)
+        filtered = filter_by_min_severity(alerts, "HIGH")
+
+        self.assertTrue(filtered)
+        self.assertTrue(all(alert.severity in {"HIGH", "CRITICAL"} for alert in filtered))
+        self.assertLess(len(filtered), len(alerts))
 
     def test_access_denied_spike_requires_threshold(self):
         base_event = {
